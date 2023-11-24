@@ -50,4 +50,7 @@ return require('packer').startup(function(use)
 			{'rafamadriz/friendly-snippets'},
 		}
 	}
+    use( 'lewis6991/gitsigns.nvim' )
+    use( 'tpope/vim-repeat' )
+    use( 'ggandor/leap.nvim' )
 end)
