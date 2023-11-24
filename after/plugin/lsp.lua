@@ -1,8 +1,23 @@
-local lsp = require('lsp-zero')
+local lsp_zero = require('lsp-zero')
 
-lsp.preset('recommended')
+lsp_zero.on_attach(function(client, bufnr)
+  lsp_zero.default_keymaps({buffer = bufnr})
+end)
 
-lsp.on_attach(function(client, bufnr)
+require('mason').setup({})
+require('mason-lspconfig').setup({
+  ensure_installed = {'tsserver', 'rust_analyzer'},
+  handlers = {
+    lsp_zero.default_setup,
+    lua_ls = function()
+      local lua_opts = lsp_zero.nvim_lua_ls()
+      require('lspconfig').lua_ls.setup(lua_opts)
+    end,
+  },
+})
+lsp_zero.preset('recommended')
+
+lsp_zero.on_attach(function(client, bufnr)
 	local opts = {buffer = bufnr, remap = false}
 
 	vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
@@ -14,7 +29,7 @@ lsp.on_attach(function(client, bufnr)
 	vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
 	vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
 	vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-	vim.keymap.set("n", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+	vim.keymap.set("n", "<C-s>", function() vim.lsp.buf.signature_help() end, opts)
 end)
 
-lsp.setup()
+lsp_zero.setup()
